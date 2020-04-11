@@ -1,0 +1,78 @@
+{
+    "common": {
+        "name": "artnet2",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Art-Net",
+        "titleLang": {
+            "en": "Art-Net",
+            "de": "Art-Net",
+            "ru": "Art-Net",
+            "pt": "Art-Net",
+            "nl": "Art-Net",
+            "fr": "Art-Net",
+            "it": "Art-Net",
+            "es": "Art-Net",
+            "pl": "Art-Net",
+            "zh-cn": "艺术网"
+        },
+        "desc": {
+            "en": "Sends Art-Net data to an Art-Net node",
+            "de": "Sendet Art-Net-Daten an einen Art-Net-Knoten",
+            "ru": "Отправляет данные Art-Net на узел Art-Net",
+            "pt": "Envia dados Art-Net para um nó Art-Net",
+            "nl": "Verzendt Art-Net-gegevens naar een Art-Net-knooppunt",
+            "fr": "Envoie des données Art-Net à un nœud Art-Net",
+            "it": "Invia i dati Art-Net a un nodo Art-Net",
+            "es": "Envía datos Art-Net a un nodo Art-Net",
+            "pl": "Wysyła dane Art-Net do węzła Art-Net",
+            "zh-cn": "将Art-Net数据发送到Art-Net节点"
+        },
+        "authors": [
+            "BenjaminHae <bradevelop@gmail.com>"
+        ],
+        "keywords": [
+            "artnet",
+            "DMX",
+            "IoT"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "artnet2.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/BenjaminHae/ioBroker.artnet2/master/admin/artnet2.png",
+        "readme": "https://github.com/BenjaminHae/ioBroker.artnet2/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "lighting",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "assumption",
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=1.4.2"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": []
+}
