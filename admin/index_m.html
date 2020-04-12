@@ -89,7 +89,7 @@
         function createDevice(fixtureId, deviceName, firstAddress) {
             fixture = fixtures[fixtureId];
             deviceObject = generateDeviceObject(fixture, deviceName, firstAddress);
-            states = generateDeviceState(fixture, deviceObject._id, deviceName, firstAddress);
+            states = generateDeviceStates(fixture, deviceObject._id, deviceName, firstAddress);
             states.push(deviceObject);
             return states;
         }
