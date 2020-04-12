@@ -70,9 +70,127 @@
         ]
     },
     "native": {
-        "option1": true,
-        "option2": "42"
+        "host": "127.0.0.1",
+        "port": "6454",
+        "universe": "0"
     },
-    "objects": [],
+    "objects": [
+        {
+	    "_id": "artnet2.meta",
+	    "type": "meta",
+	    "meta": {
+  	 	    "adapter": "artnet2",
+		    "type": ""
+		    },
+	    "common": {},
+	    "native": {}
+        },
+         {
+            "_id": "artnet2.meta.dimmer",
+            "type": "meta",
+            "parent": "artnet2.meta",
+            "meta": {
+                "adapter": "artnet2",
+                "type": "fixture"
+            },
+            "common": {
+                "name": "generic dimmer"
+            },
+            "native": {
+                "channel": {
+                    "type": "channel",
+                    "common": {
+                        "role": "light.dimmer"
+                    },
+                    "native": {}
+                },
+                "length": 1,
+                "states": [
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.dimmer",
+                            "type": "number",
+                            "min": 0,
+                            "max": 255,
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    }
+                ]
+            }
+        },
+        {
+            "_id": "artnet2.meta.rgb",
+            "type": "meta",
+            "parent": "artnet2.meta",
+            "meta": {
+                "adapter": "artnet2",
+                "type": "fixture"
+            },
+            "common": {
+                "name": "generic rgb"
+            },
+            "native": {
+                "channel": {
+                    "type": "channel",
+                    "common": {
+                        "role": "light.rgb"
+                    },
+                    "native": {}
+                },
+                "length": 3,
+                "states": [
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.color.red",
+                            "type": "number",
+                            "min": 0,
+                            "max": 255,
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.color.green",
+                            "type": "number",
+                            "min": 0,
+                            "max": 255,
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.color.blue",
+                            "type": "number",
+                            "min": 0,
+                            "max": 255,
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.color.rgb",
+                            "type": "string",
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    }
+                ]
+            }
+        }
+    ],
     "instanceObjects": []
 }
