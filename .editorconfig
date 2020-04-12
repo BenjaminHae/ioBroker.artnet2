@@ -1,6 +1,6 @@
 root = false
 
-[*.{js,ts}]
+[*.{js,ts,html}]
 indent_style = space
 indent_size = 4
 
