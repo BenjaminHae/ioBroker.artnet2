@@ -4,11 +4,11 @@
 
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
-import * as utils from "@iobroker/adapter-core";
+import * as utils from '@iobroker/adapter-core';
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
-import { ArtnetController } from "./lib/artnetController";
+import { ArtnetController } from './lib/artnetController';
 
 // Augment the adapter.config object with the actual types
 // TODO: delete this in the next version
@@ -30,13 +30,13 @@ class Artnet2 extends utils.Adapter {
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
             ...options,
-            name: "artnet2",
+            name: 'artnet2',
         });
-        this.on("ready", this.onReady.bind(this));
-        this.on("objectChange", this.onObjectChange.bind(this));
-        this.on("stateChange", this.onStateChange.bind(this));
+        this.on('ready', this.onReady.bind(this));
+        this.on('objectChange', this.onObjectChange.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
         // this.on('message', this.onMessage.bind(this));
-        this.on("unload", this.onUnload.bind(this));
+        this.on('unload', this.onUnload.bind(this));
     }
 
     /**
@@ -47,9 +47,9 @@ class Artnet2 extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        this.log.info("config host: " + this.config.host);
-        this.log.info("config port: " + this.config.port);
-        this.log.info("config universe: " + this.config.universe);
+        this.log.info('config host: ' + this.config.host);
+        this.log.info('config port: ' + this.config.port);
+        this.log.info('config universe: ' + this.config.universe);
 
         /*
         For every state in the system there has to be also an object of type state
@@ -69,7 +69,7 @@ class Artnet2 extends utils.Adapter {
         //});
 
         // in this template all states changes inside the adapters namespace are subscribed
-        this.subscribeStates("*");
+        this.subscribeStates('*');
 
         /*
         setState examples
@@ -101,7 +101,7 @@ class Artnet2 extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            this.log.info("cleaned everything up...");
+            this.log.info('cleaned everything up...');
             if (this.artnetController) {
                 this.artnetController.close();
             }
