@@ -43,7 +43,7 @@ export class ArtnetController {
     artnet: any;
     universe: number;
     transitions: DesiredState[];
-    loop: NodeJS.Timeout = null;
+    loop: NodeJS.Timeout | null = null;
     periodLength: number;
     
 
@@ -85,7 +85,7 @@ export class ArtnetController {
         channels.sort( (a: Channel, b: Channel) => { return a.channel - b.channel });
         const startAddress: number = channels[0].channel;
         let currentAddress: number = startAddress;
-        const values: Array<number> = [];
+        const values: Array<number | null> = [];
         for (const item of channels) {
             while (currentAddress < item.channel) {
                 values.push(null);

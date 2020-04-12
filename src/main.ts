@@ -25,7 +25,7 @@ declare global {
 }
 
 class Artnet2 extends utils.Adapter {
-    let artnetController: ArtnetController;
+    artnetController: ArtnetController | null = null;
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -56,17 +56,17 @@ class Artnet2 extends utils.Adapter {
         Here a simple template for a boolean variable named "testVariable"
         Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
         */
-        await this.setObjectAsync("testVariable", {
-            type: "state",
-            common: {
-                name: "testVariable",
-                type: "boolean",
-                role: "indicator",
-                read: true,
-                write: true,
-            },
-            native: {},
-        });
+        //await this.setObjectAsync("testVariable", {
+        //    type: "state",
+        //    common: {
+        //        name: "testVariable",
+        //        type: "boolean",
+        //        role: "indicator",
+        //        read: true,
+        //        write: true,
+        //    },
+        //    native: {},
+        //});
 
         // in this template all states changes inside the adapters namespace are subscribed
         this.subscribeStates("*");
@@ -75,23 +75,24 @@ class Artnet2 extends utils.Adapter {
         setState examples
         you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
         */
-        // the variable testVariable is set to true as command (ack=false)
-        await this.setStateAsync("testVariable", true);
+        //// the variable testVariable is set to true as command (ack=false)
+        //await this.setStateAsync("testVariable", true);
 
-        // same thing, but the value is flagged "ack"
-        // ack should be always set to true if the value is received from or acknowledged from the target system
-        await this.setStateAsync("testVariable", { val: true, ack: true });
+        //// same thing, but the value is flagged "ack"
+        //// ack should be always set to true if the value is received from or acknowledged from the target system
+        //await this.setStateAsync("testVariable", { val: true, ack: true });
 
-        // same thing, but the state is deleted after 30s (getState will return null afterwards)
-        await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
+        //// same thing, but the state is deleted after 30s (getState will return null afterwards)
+        //await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
 
-        // examples for the checkPassword/checkGroup functions
-        let result = await this.checkPasswordAsync("admin", "iobroker");
-        this.log.info("check user admin pw iobroker: " + result);
+        //// examples for the checkPassword/checkGroup functions
+        //let result = await this.checkPasswordAsync("admin", "iobroker");
+        //this.log.info("check user admin pw iobroker: " + result);
 
-        result = await this.checkGroupAsync("admin", "admin");
-        this.log.info("check group user admin group admin: " + result);
+        //result = await this.checkGroupAsync("admin", "admin");
+        //this.log.info("check group user admin group admin: " + result);
 
+        // instanciate artnet controller
         this.artnetController = new ArtnetController(this.config.host, this.config.port, this.config.universe);
     }
 
@@ -101,7 +102,9 @@ class Artnet2 extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             this.log.info("cleaned everything up...");
-            this.artnetController.close();
+            if (this.artnetController) {
+                this.artnetController.close();
+            }
             callback();
         } catch (e) {
             callback();
@@ -125,6 +128,7 @@ class Artnet2 extends utils.Adapter {
      * Is called if a subscribed state changes
      */
     private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
+        this.log.debug(JSON.stringify(state));
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
