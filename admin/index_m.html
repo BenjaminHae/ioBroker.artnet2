@@ -70,7 +70,7 @@
             let states = JSON.parse(JSON.stringify(fixture.native.states));
             for (let state of states) {
                 // get type of state
-                let dpType = states[i].common.role.split('.').pop();
+                let dpType = state.common.role.split('.').pop();
                 state._id = deviceId + '.' + dpType;
                 state.parent = deviceId;
                 state.common_name = deviceName ? deviceName + ' ' + dpType : state._id;
