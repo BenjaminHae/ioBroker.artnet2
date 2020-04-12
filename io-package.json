@@ -117,6 +117,17 @@
                             "read": false
                         },
                         "native": {}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.transition",
+                            "type": "number",
+                            "min": 0,
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
                     }
                 ]
             }
@@ -183,6 +194,17 @@
                         "common": {
                             "role": "level.color.rgb",
                             "type": "string",
+                            "write": true,
+                            "read": false
+                        },
+                        "native": {}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "level.transition",
+                            "type": "number",
+                            "min": 0,
                             "write": true,
                             "read": false
                         },
