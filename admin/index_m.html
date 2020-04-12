@@ -100,7 +100,7 @@
                 var obj = _objs.pop();
                 console.log('Add ' + obj._id);
                 socket.emit('setObject', obj._id, obj, function () {
-                        insertObjs(_objs);
+                        backendInsertObjs(_objs);
                         });
             }
         }
@@ -108,7 +108,7 @@
             deviceName = "Test";
             firstAddress = 1;
             device = createDevice(fixtureId, deviceName, firstAddress);
-            backendInsertObj([device]);
+            backendInsertObjs(device);
         }
         
     </script>
