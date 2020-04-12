@@ -8,6 +8,7 @@ import * as utils from "@iobroker/adapter-core";
 
 // Load your modules here, e.g.:
 // import * as fs from "fs";
+import { ArtnetController } from "./lib/artnetController";
 
 // Augment the adapter.config object with the actual types
 // TODO: delete this in the next version
@@ -16,15 +17,15 @@ declare global {
     namespace ioBroker {
         interface AdapterConfig {
             // Define the shape of your options here (recommended)
-            option1: boolean;
-            option2: string;
-            // Or use a catch-all approach
-            [key: string]: any;
+            host: string;
+            port: number;
+            universe: number;
         }
     }
 }
 
 class Artnet2 extends utils.Adapter {
+    let artnetController: ArtnetController;
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -46,8 +47,9 @@ class Artnet2 extends utils.Adapter {
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
-        this.log.info("config option1: " + this.config.option1);
-        this.log.info("config option2: " + this.config.option2);
+        this.log.info("config host: " + this.config.host);
+        this.log.info("config port: " + this.config.port);
+        this.log.info("config universe: " + this.config.universe);
 
         /*
         For every state in the system there has to be also an object of type state
@@ -89,6 +91,8 @@ class Artnet2 extends utils.Adapter {
 
         result = await this.checkGroupAsync("admin", "admin");
         this.log.info("check group user admin group admin: " + result);
+
+        this.artnetController = new ArtnetController(this.config.host, this.config.port, this.config.universe);
     }
 
     /**
@@ -97,6 +101,7 @@ class Artnet2 extends utils.Adapter {
     private onUnload(callback: () => void): void {
         try {
             this.log.info("cleaned everything up...");
+            this.artnetController.close();
             callback();
         } catch (e) {
             callback();
