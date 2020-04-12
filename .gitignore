@@ -6,7 +6,6 @@ nbproject
 
 # Sourcemaps
 maps/
-build/
 
 # npm package files
 iobroker.*.tgz
