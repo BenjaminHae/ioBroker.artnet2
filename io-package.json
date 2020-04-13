@@ -116,7 +116,7 @@
                             "write": true,
                             "read": false
                         },
-                        "native": {}
+                        "native": {"channel": null}
                     },
                     {
                         "type": "state",
@@ -163,7 +163,7 @@
                             "write": true,
                             "read": false
                         },
-                        "native": {}
+                        "native": {"channel": null}
                     },
                     {
                         "type": "state",
@@ -175,7 +175,7 @@
                             "write": true,
                             "read": false
                         },
-                        "native": {}
+                        "native": {"channel": null}
                     },
                     {
                         "type": "state",
@@ -187,7 +187,7 @@
                             "write": true,
                             "read": false
                         },
-                        "native": {}
+                        "native": {"channel": null}
                     },
                     {
                         "type": "state",

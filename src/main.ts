@@ -109,24 +109,17 @@ class Artnet2 extends utils.Adapter {
         this.getAdapterObjects((objects) => {
             for (let id in objects) {
                 let obj = objects[id];
-                this.log.info(id);
-                this.log.info(JSON.stringify(obj));
                 if (obj["type"] != "state") {
-                    this.log.info("is not state");
                     continue
                 }
                 if (! ("native" in obj)) {
-                    this.log.info("has not native");
                     continue
                 }
                 if (! ("channel" in obj["native"])) {
-                    this.log.info("has not channel");
                     continue
                 }
                 this.channels[obj["_id"]] = obj["native"]["channel"];
-                this.log.info(obj["_id"] + ":" + obj["native"]["channel"]);
             }
-            this.log.info(JSON.stringify(this.channels));
         });
 
         // instanciate artnet controller
@@ -168,6 +161,18 @@ class Artnet2 extends utils.Adapter {
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            if (this.artnetController && id in this.channels) {
+                let idParts = id.split('.');
+                idParts.pop();
+                idParts.push('transition');
+                const transitionId = idParts.join('.');
+                
+                let transition = this.states[transitionId];
+                let oldValue = this.states[id];
+                let channel = this.channels[id]
+                this.log.info(`channel ${id} transition to ${state.val} in ${transition} from ${oldValue}`);
+                this.artnetController.setValue(channel, state.val, transition, oldValue);
+            }
             this.states[id] = state.val;
         } else {
             // The state was deleted
