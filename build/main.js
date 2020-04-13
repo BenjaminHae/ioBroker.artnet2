@@ -83,7 +83,12 @@ class Artnet2 extends utils.Adapter {
                     this.states[id] = states[id].val;
                 }
             });
-            this.getAdapterObjects((objs) => this.log.info(JSON.stringify(objs)));
+            this.getAdapterObjects((objects) => {
+                for (let id in objects) {
+                    this.log.info(id);
+                    this.log.info(JSON.stringify(objects[id]));
+                }
+            });
             // instanciate artnet controller
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
         });
