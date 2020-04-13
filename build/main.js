@@ -74,14 +74,14 @@ class Artnet2 extends utils.Adapter {
             //result = await this.checkGroupAsync("admin", "admin");
             //this.log.info("check group user admin group admin: " + result);
             this.getStates('*', (err, state) => {
-                this.log.debug('*');
-                this.log.debug(JSON.stringify(err));
-                this.log.debug(JSON.stringify(state));
+                this.log.info('*');
+                this.log.info(JSON.stringify(err));
+                this.log.info(JSON.stringify(state));
             });
             this.getStates('rgb*', (err, state) => {
-                this.log.debug('rgb*');
-                this.log.debug(JSON.stringify(err));
-                this.log.debug(JSON.stringify(state));
+                this.log.info('rgb*');
+                this.log.info(JSON.stringify(err));
+                this.log.info(JSON.stringify(state));
             });
             // instanciate artnet controller
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
