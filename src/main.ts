@@ -24,8 +24,12 @@ declare global {
     }
 }
 
+interface IdDictionary<T> {
+    [key: string]: T;
+}
 class Artnet2 extends utils.Adapter {
     artnetController: ArtnetController | null = null;
+    states: IdDictionary<number> = {};
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -92,16 +96,15 @@ class Artnet2 extends utils.Adapter {
         //result = await this.checkGroupAsync("admin", "admin");
         //this.log.info("check group user admin group admin: " + result);
 
-        this.getStates('*', (err, state) => {
-            this.log.info('*');
-            this.log.info(JSON.stringify(err));
-            this.log.info(JSON.stringify(state));
-        });
-
-        this.getStates('rgb*', (err, state) => {
-            this.log.info('rgb*');
-            this.log.info(JSON.stringify(err));
-            this.log.info(JSON.stringify(state));
+        this.getStates('*', (err, states) => {
+            if (err) {
+                this.log.info('Could not fetch states' + err);
+                return
+            }
+            for (let id in states) {
+                this.log.info(id + " is " +states[id].val);
+                this.states[id] = states[id].val;
+            }
         });
 
         // instanciate artnet controller

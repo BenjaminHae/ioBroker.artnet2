@@ -22,6 +22,7 @@ class Artnet2 extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'artnet2' }));
         this.artnetController = null;
+        this.states = {};
         this.on('ready', this.onReady.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -73,15 +74,15 @@ class Artnet2 extends utils.Adapter {
             //this.log.info("check user admin pw iobroker: " + result);
             //result = await this.checkGroupAsync("admin", "admin");
             //this.log.info("check group user admin group admin: " + result);
-            this.getStates('*', (err, state) => {
-                this.log.info('*');
-                this.log.info(JSON.stringify(err));
-                this.log.info(JSON.stringify(state));
-            });
-            this.getStates('rgb*', (err, state) => {
-                this.log.info('rgb*');
-                this.log.info(JSON.stringify(err));
-                this.log.info(JSON.stringify(state));
+            this.getStates('*', (err, states) => {
+                if (err) {
+                    this.log.info('Could not fetch states' + err);
+                    return;
+                }
+                for (let id in states) {
+                    this.log.info(id + " is " + states[id].val);
+                    this.states[id] = states[id].val;
+                }
             });
             // instanciate artnet controller
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
