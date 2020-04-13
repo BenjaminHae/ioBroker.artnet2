@@ -102,10 +102,10 @@ class Artnet2 extends utils.Adapter {
                 return
             }
             for (let id in states) {
-                this.log.info(id + " is " +states[id].val);
                 this.states[id] = states[id].val;
             }
         });
+        this.getAdapterObjects((objs) => this.log.info(JSON.stringify(objs)));
 
         // instanciate artnet controller
         this.artnetController = new ArtnetController(this.config.host, this.config.port, this.config.universe);
@@ -146,9 +146,13 @@ class Artnet2 extends utils.Adapter {
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+            this.states[id] = state.val;
         } else {
             // The state was deleted
             this.log.info(`state ${id} deleted`);
+            if (id in this.states) {
+                delete this.states[id];
+            }
         }
     }
 
