@@ -109,12 +109,20 @@ class Artnet2 extends utils.Adapter {
         this.getAdapterObjects((objects) => {
             for (let id in objects) {
                 let obj = objects[id];
-                if (obj["type"] != "state") 
+                this.log.info(id);
+                this.log.info(JSON.stringify(obj));
+                if (obj["type"] != "state") {
+                    this.log.info("is not state");
                     return
-                if (! ("native" in obj)) 
+                }
+                if (! ("native" in obj)) {
+                    this.log.info("has not native");
                     return
-                if (! ("channel" in obj["native"])) 
+                }
+                if (! ("channel" in obj["native"])) {
+                    this.log.info("has not channel");
                     return
+                }
                 this.channels[obj["_id"]] = obj["native"]["channel"];
                 this.log.info(obj["_id"] + ":" + obj["native"]["channel"]);
             }
