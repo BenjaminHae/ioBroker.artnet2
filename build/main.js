@@ -23,6 +23,7 @@ class Artnet2 extends utils.Adapter {
         super(Object.assign(Object.assign({}, options), { name: 'artnet2' }));
         this.artnetController = null;
         this.states = {};
+        this.roles = {};
         this.channels = {};
         this.on('ready', this.onReady.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
@@ -81,8 +82,9 @@ class Artnet2 extends utils.Adapter {
                     return;
                 }
                 for (let id in states) {
-                    if (states[id])
+                    if (states[id]) {
                         this.states[id] = states[id].val;
+                    }
                 }
             });
             this.getAdapterObjects((objects) => {
@@ -98,6 +100,7 @@ class Artnet2 extends utils.Adapter {
                         continue;
                     }
                     this.channels[obj["_id"]] = obj["native"]["channel"];
+                    this.log.info(JSON.stringify(obj));
                 }
             });
             // instanciate artnet controller
