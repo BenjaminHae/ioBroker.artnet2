@@ -74,6 +74,13 @@ class Artnet2 extends utils.Adapter {
             //result = await this.checkGroupAsync("admin", "admin");
             //this.log.info("check group user admin group admin: " + result);
             this.getStates('*', (err, state) => {
+                this.log.debug('*');
+                this.log.debug(JSON.stringify(err));
+                this.log.debug(JSON.stringify(state));
+            });
+            this.getStates('rgb*', (err, state) => {
+                this.log.debug('rgb*');
+                this.log.debug(JSON.stringify(err));
                 this.log.debug(JSON.stringify(state));
             });
             // instanciate artnet controller
