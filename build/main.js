@@ -73,6 +73,9 @@ class Artnet2 extends utils.Adapter {
             //this.log.info("check user admin pw iobroker: " + result);
             //result = await this.checkGroupAsync("admin", "admin");
             //this.log.info("check group user admin group admin: " + result);
+            this.getState('*', (err, state) => {
+                this.log.debug(JSON.stringify(state));
+            });
             // instanciate artnet controller
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
         });
@@ -109,7 +112,6 @@ class Artnet2 extends utils.Adapter {
      * Is called if a subscribed state changes
      */
     onStateChange(id, state) {
-        this.log.debug(JSON.stringify(state));
         if (state) {
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
