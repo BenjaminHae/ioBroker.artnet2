@@ -145,6 +145,9 @@ class Artnet2 extends utils.Adapter {
                 idParts.push('transition');
                 const transitionId = idParts.join('.');
                 let transition = this.states[transitionId];
+                if (!transition) {
+                    transition = 0;
+                }
                 let oldValue = 0;
                 if (id in this.states && this.states[id]) {
                     oldValue = this.states[id];
