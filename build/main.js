@@ -100,7 +100,7 @@ class Artnet2 extends utils.Adapter {
                         continue;
                     }
                     this.channels[obj["_id"]] = obj["native"]["channel"];
-                    this.log.info(JSON.stringify(obj));
+                    this.roles[obj["_id"]] = obj["common"]["role"];
                 }
             });
             // instanciate artnet controller
@@ -159,6 +159,13 @@ class Artnet2 extends utils.Adapter {
                 this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
             }
+            else if (this.roles[id] == "level.color.rgb") {
+                let colors = this.splitRgbColor(state.val);
+                let partId = this.getIdBase(id);
+                this.setState(partId + '.red', colors[0]);
+                this.setState(partId + '.green', colors[1]);
+                this.setState(partId + '.blue', colors[2]);
+            }
             this.states[id] = state.val;
         }
         else {
@@ -167,6 +174,31 @@ class Artnet2 extends utils.Adapter {
             if (id in this.states) {
                 delete this.states[id];
             }
+        }
+    }
+    getIdBase(id) {
+        let idParts = id.split('.');
+        idParts.pop();
+        return idParts.join('.');
+    }
+    splitRgbColor(rgb) {
+        if (!rgb)
+            rgb = '#000000';
+        rgb = rgb.toString().toUpperCase();
+        if (rgb[0] === '#') {
+            rgb = rgb.substring(1);
+        }
+        if (rgb.length == 3) {
+            rgb = rgb[0] + rgb[0] + rgb[1] + rgb[1] + rgb[2] + rgb[2];
+        }
+        const r = parseInt(rgb[0] + rgb[1], 16);
+        const g = parseInt(rgb[2] + rgb[3], 16);
+        const b = parseInt(rgb[4] + rgb[5], 16);
+        if (rgb.length >= 8) {
+            return [r, g, b, parseInt(rgb[6] + rgb[7], 16)];
+        }
+        else {
+            return [r, g, b];
         }
     }
 }
