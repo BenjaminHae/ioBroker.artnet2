@@ -30,6 +30,7 @@ interface IdDictionary<T> {
 class Artnet2 extends utils.Adapter {
     artnetController: ArtnetController | null = null;
     states: IdDictionary<number> = {};
+    channels: IdDictionary<number> = {};
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -107,9 +108,17 @@ class Artnet2 extends utils.Adapter {
         });
         this.getAdapterObjects((objects) => {
             for (let id in objects) {
-                this.log.info(id);
-                this.log.info(JSON.stringify(objects[id]));
+                let obj = objects[id];
+                if (obj["type"] != "state") 
+                    return
+                if (! ("native" in obj)) 
+                    return
+                if (! ("channel" in obj["native"])) 
+                    return
+                this.channels[obj["_id"]] = obj["native"]["channel"];
+                this.log.info(obj["_id"] + ":" + obj["native"]["channel"]);
             }
+            this.log.info(JSON.stringify(this.channels));
         });
 
         // instanciate artnet controller

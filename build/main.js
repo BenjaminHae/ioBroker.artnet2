@@ -23,6 +23,7 @@ class Artnet2 extends utils.Adapter {
         super(Object.assign(Object.assign({}, options), { name: 'artnet2' }));
         this.artnetController = null;
         this.states = {};
+        this.channels = {};
         this.on('ready', this.onReady.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -85,9 +86,17 @@ class Artnet2 extends utils.Adapter {
             });
             this.getAdapterObjects((objects) => {
                 for (let id in objects) {
-                    this.log.info(id);
-                    this.log.info(JSON.stringify(objects[id]));
+                    let obj = objects[id];
+                    if (obj["type"] != "state")
+                        return;
+                    if (!("native" in obj))
+                        return;
+                    if (!("channel" in obj["native"]))
+                        return;
+                    this.channels[obj["_id"]] = obj["native"]["channel"];
+                    this.log.info(obj["_id"] + ":" + obj["native"]["channel"]);
                 }
+                this.log.info(JSON.stringify(this.channels));
             });
             // instanciate artnet controller
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
