@@ -146,7 +146,7 @@ class Artnet2 extends utils.Adapter {
                 let transition = this.states[transitionId];
                 let oldValue = this.states[id];
                 let channel = this.channels[id];
-                this.log.info(`channel ${id} transition to ${state.val} in ${transition} from ${oldValue}`);
+                this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
             }
             this.states[id] = state.val;

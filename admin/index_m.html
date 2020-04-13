@@ -74,7 +74,9 @@
                 state._id = deviceId + '.' + dpType;
                 state.parent = deviceId;
                 state.common_name = deviceName ? deviceName + ' ' + dpType : state._id;
-                state.native.channel = firstAddress++;
+                if ("channel" in state.native) {
+                    state.native.channel = firstAddress++;
+                }
             }
             return states;
         }
