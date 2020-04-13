@@ -103,7 +103,8 @@ class Artnet2 extends utils.Adapter {
                 return
             }
             for (let id in states) {
-                this.states[id] = states[id].val;
+                if (states[id])
+                    this.states[id] = states[id].val;
             }
         });
         this.getAdapterObjects((objects) => {
@@ -168,7 +169,10 @@ class Artnet2 extends utils.Adapter {
                 const transitionId = idParts.join('.');
                 
                 let transition = this.states[transitionId];
-                let oldValue = this.states[id];
+                let oldValue = 0;
+                if (id in this.states && this.states[id]) {
+                    oldValue = this.states[id];
+                }
                 let channel = this.channels[id]
                 this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
