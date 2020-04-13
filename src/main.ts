@@ -113,15 +113,15 @@ class Artnet2 extends utils.Adapter {
                 this.log.info(JSON.stringify(obj));
                 if (obj["type"] != "state") {
                     this.log.info("is not state");
-                    return
+                    continue
                 }
                 if (! ("native" in obj)) {
                     this.log.info("has not native");
-                    return
+                    continue
                 }
                 if (! ("channel" in obj["native"])) {
                     this.log.info("has not channel");
-                    return
+                    continue
                 }
                 this.channels[obj["_id"]] = obj["native"]["channel"];
                 this.log.info(obj["_id"] + ":" + obj["native"]["channel"]);
