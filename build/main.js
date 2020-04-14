@@ -155,8 +155,10 @@ class Artnet2 extends utils.Adapter {
                 this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
                 let stateName = id.split('.').pop();
+                this.log.info(`${stateName} may change rgb`);
                 if (stateName && stateName in ["red", "green", "blue"]) {
                     let color = this.genRgbColor(baseId);
+                    this.log.info(`new Rgb: ${color}`);
                     this.setState(baseId + '.rgb', color);
                 }
             }
