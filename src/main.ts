@@ -118,11 +118,11 @@ class Artnet2 extends utils.Adapter {
                 if (! ("native" in obj)) {
                     continue
                 }
+                this.roles[obj["_id"]] = obj["common"]["role"];
                 if (! ("channel" in obj["native"])) {
                     continue
                 }
                 this.channels[obj["_id"]] = obj["native"]["channel"];
-                this.roles[obj["_id"]] = obj["common"]["role"];
             }
         });
 
