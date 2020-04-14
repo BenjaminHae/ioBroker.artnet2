@@ -140,13 +140,9 @@ class Artnet2 extends utils.Adapter {
      */
     onStateChange(id, state) {
         if (state) {
-            // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack}), ${JSON.stringify(state)}`);
             if (this.artnetController && id in this.channels) {
-                let idParts = id.split('.');
-                idParts.pop();
-                idParts.push('transition');
-                const transitionId = idParts.join('.');
+                const baseId = this.getIdBase(id);
+                const transitionId = baseId + '.transition';
                 let transition = this.states[transitionId];
                 if (!transition) {
                     transition = 0;
@@ -158,8 +154,14 @@ class Artnet2 extends utils.Adapter {
                 let channel = this.channels[id];
                 this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
+                let stateName = id.split('.').pop();
+                if (stateName && stateName in ["red", "green", "blue"]) {
+                    let color = this.genRgbColor(baseId);
+                    this.setState(baseId + '.rgb', color);
+                }
             }
             else if (this.roles[id] == "level.color.rgb") {
+                this.log.info("set rgb value");
                 let colors = this.splitRgbColor(state.val);
                 let partId = this.getIdBase(id);
                 this.setState(partId + '.red', colors[0]);
@@ -200,6 +202,19 @@ class Artnet2 extends utils.Adapter {
         else {
             return [r, g, b];
         }
+    }
+    genRgbColor(idBase) {
+        let hexRes = '#';
+        for (let color in ["red", "green", "blue"]) {
+            let state = this.states[idBase + "." + color];
+            if (!state)
+                return "";
+            let val = state.toString(16).toUpperCase();
+            if (val.length < 2)
+                val = '0' + val;
+            hexRes += val;
+        }
+        return hexRes;
     }
 }
 if (module.parent) {
