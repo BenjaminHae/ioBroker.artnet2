@@ -181,7 +181,7 @@ class Artnet2 extends utils.Adapter {
                 
                 let stateName = id.split('.').pop();
                 this.log.info(`${stateName} may change rgb`);
-                if (stateName && stateName in ["red","green","blue"]) {
+                if (stateName && ["red","green","blue"].includes(stateName)) {
                     let color = this.genRgbColor(baseId);
                     this.log.info(`new Rgb: ${color}`);
                     this.setState(baseId + '.rgb', color);
