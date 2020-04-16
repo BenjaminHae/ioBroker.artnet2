@@ -210,6 +210,7 @@ class Artnet2 extends utils.Adapter {
         let hexRes = '#';
         for (let color in ["red", "green", "blue"]) {
             let state = this.states[idBase + "." + color];
+            this.log.info(`color of ${idBase + "." + color} is ${state}`);
             if (!state)
                 return "";
             let val = state.toString(16).toUpperCase();
