@@ -156,19 +156,19 @@ class Artnet2 extends utils.Adapter {
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
                 let stateName = id.split('.').pop();
                 this.log.info(`${stateName} may change rgb`);
-                if (stateName && ["red", "green", "blue"].includes(stateName)) {
+                if (!state.ack && stateName && ["red", "green", "blue"].includes(stateName)) {
                     let color = this.genRgbColor(baseId);
                     this.log.info(`new Rgb: ${color}`);
-                    this.setState(baseId + '.rgb', color);
+                    this.setState(baseId + '.rgb', color, true);
                 }
             }
-            else if (this.roles[id] == "level.color.rgb") {
+            else if (!state.ack && this.roles[id] == "level.color.rgb") {
                 this.log.info("set rgb value");
                 let colors = this.splitRgbColor(state.val);
                 let partId = this.getIdBase(id);
-                this.setState(partId + '.red', colors[0]);
-                this.setState(partId + '.green', colors[1]);
-                this.setState(partId + '.blue', colors[2]);
+                this.setState(partId + '.red', colors[0], true);
+                this.setState(partId + '.green', colors[1], true);
+                this.setState(partId + '.blue', colors[2]), true;
             }
             this.states[id] = state.val;
         }
