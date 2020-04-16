@@ -179,6 +179,7 @@ class Artnet2 extends utils.Adapter {
                 let channel = this.channels[id]
                 this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
+                this.states[id] = state.val;
                 
                 let stateName = id.split('.').pop();
                 this.log.info(`${stateName} may change rgb`);
@@ -193,11 +194,14 @@ class Artnet2 extends utils.Adapter {
                 this.log.info("set rgb value");
                 let colors = this.splitRgbColor(state.val);
                 let partId = this.getIdBase(id);
+                this.states[id] = state.val;
                 this.setState(partId + '.red', colors[0], true);
                 this.setState(partId + '.green', colors[1], true);
                 this.setState(partId + '.blue', colors[2]), true;
             }
-            this.states[id] = state.val;
+            else if (this.roles[id] == "level.transition") {
+                this.states[id] = state.val;
+            }
         } else {
             // The state was deleted
             this.log.info(`state ${id} deleted`);
