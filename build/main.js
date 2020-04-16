@@ -140,6 +140,7 @@ class Artnet2 extends utils.Adapter {
      */
     onStateChange(id, state) {
         if (state) {
+            this.log.info(`state change ${id}: ${state.val}, ${state.ack}`);
             if (this.artnetController && id in this.channels) {
                 const baseId = this.getIdBase(id);
                 const transitionId = baseId + '.transition';
