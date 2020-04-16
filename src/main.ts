@@ -236,7 +236,7 @@ class Artnet2 extends utils.Adapter {
 
     private genRgbColor(idBase: string): string{
         let hexRes = '#';
-        for (let color in ["red", "green", "blue"]) {
+        for (let color of ["red", "green", "blue"]) {
             let state = this.states[idBase + "." + color];
             this.log.info(`color of ${idBase + "." + color} is ${state}`);
             if (!state)
