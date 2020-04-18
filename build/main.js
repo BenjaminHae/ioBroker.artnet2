@@ -83,11 +83,10 @@ class Artnet2 extends utils.Adapter {
      * Is called if a subscribed object changes
      */
     onObjectChange(id, obj) {
-        this.log.debug(`object changed`);
-        this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
+        this.log.debug(`object ${id} changed`);
         if (obj) {
             // The object was changed
-            this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
+            this.log.debug(`adding object ${id} data: ${JSON.stringify(obj)}`);
             this.addObject(obj);
         }
         else {
@@ -108,26 +107,30 @@ class Artnet2 extends utils.Adapter {
         }
     }
     addObject(obj) {
+        let id = obj['_id'];
         if (obj['type'] != 'state') {
+            this.log.debug(`addObject: ${id} is not of type state`);
             return;
         }
+        this.log.debug(`Storing object (${id}) role ${obj['common']['role']}`);
+        this.roles[id] = obj['common']['role'];
         if (!('native' in obj)) {
+            this.log.debug(`addObject: ${id} has no native values`);
             return;
         }
-        this.log.debug(`Storing object (${obj['_id']}) role ${obj['common']['role']}`);
-        this.roles[obj['_id']] = obj['common']['role'];
         if (!('channel' in obj['native'])) {
+            this.log.debug(`addObject: ${id} has no channel`);
             return;
         }
-        this.log.debug(`Storing object (${obj['_id']}) channel ${obj['native']['channel']}`);
-        this.channels[obj['_id']] = obj['native']['channel'];
+        this.log.debug(`Storing object (${id}) channel ${obj['native']['channel']}`);
+        this.channels[id] = obj['native']['channel'];
     }
     /**
      * Is called if a subscribed state changes
      */
     onStateChange(id, state) {
         if (state) {
-            this.log.debug(`state changed ${id}: ${state.val}, ack: ${state.ack}`);
+            this.log.debug(`state change event ${id}: ${state.val}, ack: ${state.ack}`);
             if (this.artnetController && id in this.channels) {
                 const baseId = this.getIdBase(id);
                 const transitionId = baseId + '.transition';
@@ -165,6 +168,7 @@ class Artnet2 extends utils.Adapter {
                 }
             }
             else if (this.roles[id] == 'level.transition') {
+                this.log.debug(`storing new transition ${id}: ${state.val}`);
                 this.states[id] = state.val;
             }
             else {
