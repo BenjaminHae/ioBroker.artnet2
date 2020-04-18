@@ -63,26 +63,26 @@ class Artnet2 extends utils.Adapter {
                 this.log.info('Could not fetch states' + err);
                 return
             }
-            for (let id in states) {
+            for (const id in states) {
                 if (states[id]) {
                     this.states[id] = states[id].val;
                 }
             }
         });
         this.getAdapterObjects((objects) => {
-            for (let id in objects) {
-                let obj = objects[id];
-                if (obj["type"] != "state") {
+            for (const id in objects) {
+                const obj = objects[id];
+                if (obj['type'] != 'state') {
                     continue
                 }
-                if (! ("native" in obj)) {
+                if (! ('native' in obj)) {
                     continue
                 }
-                this.roles[obj["_id"]] = obj["common"]["role"];
-                if (! ("channel" in obj["native"])) {
+                this.roles[obj['_id']] = obj['common']['role'];
+                if (! ('channel' in obj['native'])) {
                     continue
                 }
-                this.channels[obj["_id"]] = obj["native"]["channel"];
+                this.channels[obj['_id']] = obj['native']['channel'];
             }
         });
 
@@ -135,32 +135,32 @@ class Artnet2 extends utils.Adapter {
                 if (id in this.states && this.states[id]) {
                     oldValue = this.states[id];
                 }
-                let channel = this.channels[id]
+                const channel = this.channels[id]
                 this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
                 this.states[id] = state.val;
                 
-                let stateName = id.split('.').pop();
-                if (!state.ack && stateName && ["red","green","blue"].includes(stateName)) {
-                    let color = this.genRgbColor(baseId);
+                const stateName = id.split('.').pop();
+                if (!state.ack && stateName && ['red','green','blue'].includes(stateName)) {
+                    const color = this.genRgbColor(baseId);
                     this.log.debug(`change of ${id} sets new Rgb: ${color}`);
                     this.setState(baseId + '.rgb', color, true);
                 }
                     
             }
-            else if (this.roles[id] == "level.color.rgb") {
+            else if (this.roles[id] == 'level.color.rgb') {
                 this.log.debug(`set new rgb value: ${id}: ${state.val}`);
-                let colors = this.splitRgbColor(state.val);
+                const colors = this.splitRgbColor(state.val);
                 this.states[id] = state.val;
                 if (!state.ack) {
                     this.log.debug(`propagating rgb value ${id}: ${state.val}`);
-                    let baseId = this.getIdBase(id);
+                    const baseId = this.getIdBase(id);
                     this.setState(baseId + '.red', colors[0], true);
                     this.setState(baseId + '.green', colors[1], true);
                     this.setState(baseId + '.blue', colors[2]), true;
                 }
             }
-            else if (this.roles[id] == "level.transition") {
+            else if (this.roles[id] == 'level.transition') {
                 this.states[id] = state.val;
             }
             else {
@@ -176,12 +176,12 @@ class Artnet2 extends utils.Adapter {
     }
 
     private getIdBase(id: string): string {
-        let idParts = id.split('.');
+        const idParts = id.split('.');
         idParts.pop();
         return idParts.join('.');
     }
 
-    private splitRgbColor(rgb: string) {
+    private splitRgbColor(rgb: string): Array<number> {
         if (!rgb) 
             rgb = '#000000';
         rgb = rgb.toString().toUpperCase();
@@ -204,11 +204,11 @@ class Artnet2 extends utils.Adapter {
 
     private genRgbColor(idBase: string): string{
         let hexRes = '#';
-        for (let color of ["red", "green", "blue"]) {
-            let state = this.states[idBase + "." + color];
-            this.log.info(`color of ${idBase + "." + color} is ${state}`);
+        for (const color of ['red', 'green', 'blue']) {
+            const state = this.states[idBase + '.' + color];
+            this.log.info(`color of ${idBase + '.' + color} is ${state}`);
             if (!state)
-                return "";
+                return '';
             let val = state.toString(16).toUpperCase();
             if (val.length < 2)
                 val = '0' + val;
