@@ -88,7 +88,7 @@ function generateDeviceStates(fixture, deviceId, deviceName, firstAddress) {
         let dpType = state.common.role.split('.').pop();
         state._id = deviceId + '.' + dpType;
         state.parent = deviceId;
-        state.common_name = deviceName ? deviceName + ' ' + dpType : state._id;
+        state.common.name = deviceName ? deviceName + ' ' + dpType : state._id;
         if ("channel" in state.native) {
             state.native.channel = firstAddress++;
         }
@@ -103,8 +103,7 @@ function generateDeviceObject(fixture, deviceName, firstAddress) {
     deviceObj.native.length   = fixture.native.length;
     return deviceObj;
 }
-function createDevice(fixtureId, deviceName, firstAddress) {
-    fixture = fixtures[fixtureId];
+function createDevice(fixture, deviceName, firstAddress) {
     deviceObject = generateDeviceObject(fixture, deviceName, firstAddress);
     states = generateDeviceStates(fixture, deviceObject._id, deviceName, firstAddress);
     states.push(deviceObject);
@@ -121,9 +120,16 @@ function backendInsertObjs(_objs) {
                 });
     }
 }
-function createAndStoreDevices(fixtureId) {
-    deviceName = "Test";
-    firstAddress = 1;
-    device = createDevice(fixtureId, deviceName, firstAddress);
-    backendInsertObjs(device);
+function createAndStoreDevices(names, firstAddress, fixtureId) {
+    let objects = [];
+    let currentAddress = firstAddress;
+    const fixture = fixtures[fixtureId];
+    let channelNumber = fixture.native.length;
+    
+    for (const deviceName of names) {
+        objects.concat(createDevice(fixture, deviceName, currentAddress));
+        currentAddress += channelNumber;
+    }
+    
+    backendInsertObjs(objects);
 }
