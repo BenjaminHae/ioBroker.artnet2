@@ -143,7 +143,7 @@ class Artnet2 extends utils.Adapter {
      */
     private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
         if (state) {
-            this.log.debug(`object ${id} deleted`);
+            this.log.debug(`state changed ${id}: ${state.val}, ack: ${state.ack}`);
             if (this.artnetController && id in this.channels) {
                 const baseId = this.getIdBase(id);
                 const transitionId = baseId + '.transition';
