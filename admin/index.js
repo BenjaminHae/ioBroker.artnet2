@@ -48,11 +48,7 @@ function load(settings, onChange) {
                 }
             }
             createAndStoreDevices(names, firstAddress, fixtureId, () => {
-                $("messages").append(
-                    $('<div class="alert alert-primary translate" role="alert">add success</div>')
-                        .delay(5000)
-                        .remove()
-                );
+                M.toast({html: _('add success')});
             });
         });
     $('#show_artnet_add').off('click').on('click', function () {
