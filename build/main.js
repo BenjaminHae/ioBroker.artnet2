@@ -39,43 +39,9 @@ class Artnet2 extends utils.Adapter {
             // Initialize your adapter here
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:
-            this.log.info('config host: ' + this.config.host);
-            this.log.info('config port: ' + this.config.port);
-            this.log.info('config universe: ' + this.config.universe);
-            /*
-            For every state in the system there has to be also an object of type state
-            Here a simple template for a boolean variable named "testVariable"
-            Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-            */
-            //await this.setObjectAsync("testVariable", {
-            //    type: "state",
-            //    common: {
-            //        name: "testVariable",
-            //        type: "boolean",
-            //        role: "indicator",
-            //        read: true,
-            //        write: true,
-            //    },
-            //    native: {},
-            //});
+            this.log.info(`host: ${this.config.host}, port: ${this.config.port}, universe: ${this.config.universe}`);
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates('*');
-            /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-            */
-            //// the variable testVariable is set to true as command (ack=false)
-            //await this.setStateAsync("testVariable", true);
-            //// same thing, but the value is flagged "ack"
-            //// ack should be always set to true if the value is received from or acknowledged from the target system
-            //await this.setStateAsync("testVariable", { val: true, ack: true });
-            //// same thing, but the state is deleted after 30s (getState will return null afterwards)
-            //await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-            //// examples for the checkPassword/checkGroup functions
-            //let result = await this.checkPasswordAsync("admin", "iobroker");
-            //this.log.info("check user admin pw iobroker: " + result);
-            //result = await this.checkGroupAsync("admin", "admin");
-            //this.log.info("check group user admin group admin: " + result);
             this.getStates('*', (err, states) => {
                 if (err) {
                     this.log.info('Could not fetch states' + err);
@@ -128,11 +94,11 @@ class Artnet2 extends utils.Adapter {
     onObjectChange(id, obj) {
         if (obj) {
             // The object was changed
-            this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+            this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
         }
         else {
             // The object was deleted
-            this.log.info(`object ${id} deleted`);
+            this.log.debug(`object ${id} deleted`);
         }
     }
     /**
@@ -140,7 +106,6 @@ class Artnet2 extends utils.Adapter {
      */
     onStateChange(id, state) {
         if (state) {
-            this.log.info(`state change ${id}: ${state.val}, ${state.ack}`);
             if (this.artnetController && id in this.channels) {
                 const baseId = this.getIdBase(id);
                 const transitionId = baseId + '.transition';
@@ -153,28 +118,33 @@ class Artnet2 extends utils.Adapter {
                     oldValue = this.states[id];
                 }
                 let channel = this.channels[id];
-                this.log.info(`channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
+                this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 this.artnetController.setValue(channel, state.val, transition, oldValue);
                 this.states[id] = state.val;
                 let stateName = id.split('.').pop();
-                this.log.info(`${stateName} may change rgb`);
                 if (!state.ack && stateName && ["red", "green", "blue"].includes(stateName)) {
                     let color = this.genRgbColor(baseId);
-                    this.log.info(`new Rgb: ${color}`);
+                    this.log.debug(`change of ${id} sets new Rgb: ${color}`);
                     this.setState(baseId + '.rgb', color, true);
                 }
             }
-            else if (!state.ack && this.roles[id] == "level.color.rgb") {
-                this.log.info("set rgb value");
+            else if (this.roles[id] == "level.color.rgb") {
+                this.log.debug(`set new rgb value: ${id}: ${state.val}`);
                 let colors = this.splitRgbColor(state.val);
-                let partId = this.getIdBase(id);
                 this.states[id] = state.val;
-                this.setState(partId + '.red', colors[0], true);
-                this.setState(partId + '.green', colors[1], true);
-                this.setState(partId + '.blue', colors[2]), true;
+                if (!state.ack) {
+                    this.log.debug(`propagating rgb value ${id}: ${state.val}`);
+                    let baseId = this.getIdBase(id);
+                    this.setState(baseId + '.red', colors[0], true);
+                    this.setState(baseId + '.green', colors[1], true);
+                    this.setState(baseId + '.blue', colors[2]), true;
+                }
             }
             else if (this.roles[id] == "level.transition") {
                 this.states[id] = state.val;
+            }
+            else {
+                this.log.debug(`unknown state change: ${id} to ${state.val}`);
             }
         }
         else {
