@@ -72,17 +72,7 @@ class Artnet2 extends utils.Adapter {
         this.getAdapterObjects((objects) => {
             for (const id in objects) {
                 const obj = objects[id];
-                if (obj['type'] != 'state') {
-                    continue
-                }
-                if (! ('native' in obj)) {
-                    continue
-                }
-                this.roles[obj['_id']] = obj['common']['role'];
-                if (! ('channel' in obj['native'])) {
-                    continue
-                }
-                this.channels[obj['_id']] = obj['native']['channel'];
+                this.addObject(obj);
             }
         });
 
@@ -112,10 +102,39 @@ class Artnet2 extends utils.Adapter {
         if (obj) {
             // The object was changed
             this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
+            this.addObject(obj);
         } else {
             // The object was deleted
             this.log.debug(`object ${id} deleted`);
+            if (id in this.roles) {
+                this.log.debug(`deleting role ${id}`);
+                delete this.roles[id];
+            }
+            if (id in this.channels) {
+                this.log.debug(`deleting channel ${id}`);
+                delete this.channels[id];
+            }
+            if (id in this.states) {
+                this.log.debug(`deleting state ${id}`);
+                delete this.states[id];
+            }
         }
+    }
+
+    private addObject(obj: ioBroker.Object): void {
+        if (obj['type'] != 'state') {
+            return
+        }
+        if (! ('native' in obj)) {
+            return
+        }
+        this.log.debug(`Storing object (${obj['_id']}) role ${obj['common']['role']}`);
+        this.roles[obj['_id']] = obj['common']['role'];
+        if (! ('channel' in obj['native'])) {
+            return
+        }
+        this.log.debug(`Storing object (${obj['_id']}) channel ${obj['native']['channel']}`);
+        this.channels[obj['_id']] = obj['native']['channel'];
     }
 
     /**
@@ -123,6 +142,7 @@ class Artnet2 extends utils.Adapter {
      */
     private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
         if (state) {
+            this.log.debug(`object ${id} deleted`);
             if (this.artnetController && id in this.channels) {
                 const baseId = this.getIdBase(id);
                 const transitionId = baseId + '.transition';
@@ -143,10 +163,11 @@ class Artnet2 extends utils.Adapter {
                 const stateName = id.split('.').pop();
                 if (!state.ack && stateName && ['red','green','blue'].includes(stateName)) {
                     const color = this.genRgbColor(baseId);
-                    this.log.debug(`change of ${id} sets new Rgb: ${color}`);
-                    this.setState(baseId + '.rgb', color, true);
+                    if (color.length > 0) {
+                        this.log.debug(`change of ${id} sets new Rgb: ${color}`);
+                        this.setState(baseId + '.rgb', color, true);
+                    }
                 }
-                    
             }
             else if (this.roles[id] == 'level.color.rgb') {
                 this.log.debug(`set new rgb value: ${id}: ${state.val}`);
