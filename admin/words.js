@@ -50,4 +50,8 @@ systemDictionary = {
         'en': 'Cancel',
         'de': 'Abbrechen',
     },
+    'help': {
+        'en': 'The devices can be only created here. To change the name or delete object, please use admin object editor. To change the address or type the device must be deleted and created anew.', 
+        'de': 'Die Geräte können hier nur erzeugt werden. Um den Namen zu ändern, oder das Objekt zu löschen, benutzen Sie bitte Admin-Lasche-\"Objekte\". Um die Adresse oder den Typ zu ändern, muss das Gerät neu erzuegt werden."
+    }
 };
