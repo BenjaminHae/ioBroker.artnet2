@@ -8,3 +8,10 @@
 }
 
 /* Add your styles here */
+.m .select-wrapper+label {
+    top: 100%;
+}
+.m .select-wrapper input.select-dropdown {
+    height: 1.5rem;
+    line-height: 1.5rem;
+}
