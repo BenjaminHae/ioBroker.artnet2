@@ -58,6 +58,8 @@ class Artnet2 extends utils.Adapter {
         // in this template all states changes inside the adapters namespace are subscribed
         this.subscribeStates('*');
 
+        this.subscribeObjects('*');
+
         this.getStates('*', (err, states) => {
             if (err) {
                 this.log.info('Could not fetch states' + err);
