@@ -99,6 +99,7 @@ class Artnet2 extends utils.Adapter {
      * Is called if a subscribed object changes
      */
     private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
+        this.log.debug(`object changed`);
         this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
         if (obj) {
             // The object was changed
