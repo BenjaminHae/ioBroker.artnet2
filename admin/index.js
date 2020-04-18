@@ -25,7 +25,7 @@ function load(settings, onChange) {
     if (M) M.updateTextFields();
 
     socket.emit('getObjectView', 'system', 'meta', {startkey: 'artnet2.meta.', endkey: 'artnet2.meta.\u9999', include_docs: true}, function (err, res) {
-        for (const i = res.rows.length - 1; i >= 0; i--) {
+        for (let i = res.rows.length - 1; i >= 0; i--) {
             const row = res.rows[i];
             fixtures[row.id] = row.value;
             $('#artnet_add_device_fixture').append('<option value="' + row.id + '">' + _(row.value.native.channel.common.role) + '</option>');
@@ -49,20 +49,20 @@ function load(settings, onChange) {
             }
             createAndStoreDevices(name, firstAddress, fixture);
         });
-        $('#add').off('click').on('click', function () {
-            // find next free address
-            var max = 1;
-            $('.device').each(function () {
-                var id = $(this).data('channel');
-                if (objects[id].native.address + objects[id].native.length > max) {
-                    max = objects[id].native.address + objects[id].native.length;
-                }
-            });
+    $('#show_artnet_add').off('click').on('click', function () {
+        // find next free address
+        var max = 1;
+        //$('.device').each(function () {
+        //    var id = $(this).data('channel');
+        //    if (objects[id].native.address + objects[id].native.length > max) {
+        //        max = objects[id].native.address + objects[id].native.length;
+        //    }
+        //});
 
-            $('#fixture-count').val(1);
-            $('#first-address').val(max);
-            $('#dialog-fixture').modal().modal('open');
-        });
+        $('#fixture-count').val(1);
+        $('#first-address').val(max);
+        $('#dialog-fixture').modal().modal('open');
+    });
 }
 
 // This will be called by the admin adapter when the user presses the save button
