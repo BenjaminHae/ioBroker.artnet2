@@ -65,6 +65,7 @@ function load(settings, onChange) {
         $('#first-address').val(max);
         $('#dialog-fixture').modal().modal('open');
     });
+    $('artnet_add_device_fixture').material_select();
 }
 
 // This will be called by the admin adapter when the user presses the save button
