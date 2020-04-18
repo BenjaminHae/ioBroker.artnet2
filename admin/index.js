@@ -48,7 +48,9 @@ function load(settings, onChange) {
                     names.push(name + ' ' + i);
                 }
             }
-            createAndStoreDevices(names, firstAddress, fixtureId);
+            createAndStoreDevices(names, firstAddress, fixtureId, () => {
+                $("messages").append($('<div class="alert alert-primary translate" role="alert">add success</div>').delay(5000).remove(););
+            });
         });
     $('#show_artnet_add').off('click').on('click', function () {
         // find next free address
@@ -109,18 +111,19 @@ function createDevice(fixture, deviceName, firstAddress) {
     states.push(deviceObject);
     return states;
 }
-function backendInsertObjs(_objs) {
+function backendInsertObj(_objs, callback) {
     if (!_objs || !_objs.length) {
         console.log('done storing devices');
+        callback();
     } else {
         var obj = _objs.pop();
         console.log('Add ' + obj._id);
         socket.emit('setObject', obj._id, obj, function () {
-                backendInsertObjs(_objs);
+                backendInsertObj(_objs, callback);
                 });
     }
 }
-function createAndStoreDevices(names, firstAddress, fixtureId) {
+function createAndStoreDevices(names, firstAddress, fixtureId, callback) {
     const fixture = fixtures[fixtureId];
     let currentAddress = firstAddress;
     let channelNumber = fixture.native.length;
@@ -131,5 +134,5 @@ function createAndStoreDevices(names, firstAddress, fixtureId) {
         currentAddress += channelNumber;
     }
     
-    backendInsertObjs(objects);
+    backendInsertObjs(objects, callback);
 }
