@@ -28,6 +28,7 @@ function load(settings, onChange) {
         for (let i = res.rows.length - 1; i >= 0; i--) {
             const row = res.rows[i];
             fixtures[row.id] = row.value;
+            console.log("adding fixture option " + row.id + " by name " + _(row.value.native.channel.common.role));
             $('#artnet_add_device_fixture').append('<option value="' + row.id + '">' + _(row.value.native.channel.common.role) + '</option>');
         }
     });

@@ -45,7 +45,7 @@ systemDictionary = {
     'First address': {
         'en': 'First address',
         'de': 'Erste Adresse',
-    }
+    },
     'Cancel': {
         'en': 'Cancel',
         'de': 'Abbrechen',
