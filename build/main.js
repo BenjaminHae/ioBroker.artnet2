@@ -144,7 +144,7 @@ class Artnet2 extends utils.Adapter {
                 }
                 const channel = this.channels[id];
                 this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
-                this.artnetController.setValueFromCurrentValue(channel, state.val, transition, oldValue);
+                this.artnetController.setValueFromCurrentValue(channel, state.val, this.transitionTimeToSteps(transition), oldValue);
                 this.states[id] = state.val;
                 const stateName = id.split('.').pop();
                 if (!state.ack && stateName && ['red', 'green', 'blue'].includes(stateName)) {
@@ -183,6 +183,11 @@ class Artnet2 extends utils.Adapter {
                 delete this.states[id];
             }
         }
+    }
+    transitionTimeToSteps(transitionTime) {
+        if (!this.artnetController)
+            return 0;
+        return Math.floor(transitionTime / this.artnetController.periodLength);
     }
     getIdBase(id) {
         const idParts = id.split('.');
