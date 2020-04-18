@@ -82,6 +82,7 @@ class Artnet2 extends utils.Adapter {
      * Is called if a subscribed object changes
      */
     onObjectChange(id, obj) {
+        this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
         if (obj) {
             // The object was changed
             this.log.debug(`object ${id} changed: ${JSON.stringify(obj)}`);
