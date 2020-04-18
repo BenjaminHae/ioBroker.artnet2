@@ -61,11 +61,23 @@ export class ArtnetController {
         }
     }
 
+    getStateForChannel(channel: number): DesiredState | undefined {
+        return this.transitions.find(element => element.channel == channel);
+    }
+
     setValue(channel: number, value: number, transitionLength = 0, currentValue = 0): void {
         const state = new DesiredState(channel, value, transitionLength, currentValue);
+        this.transitions = this.transitions.filter( (state: DesiredState) => state.channel != channel );
         this.transitions.push(state);
         
         this.initLoop();
+    }
+
+    setValueFromCurrentValue(channel: number, value: number, transitionLength = 0, currentValue = 0): void {
+        const state = this.getStateForChannel(channel);
+        if (state)
+            currentValue = state.currentValue;
+        this.setValue(channel, value, transitionLength, currentValue);
     }
 
     initLoop(): void {

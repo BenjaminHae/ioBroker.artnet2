@@ -42,10 +42,20 @@ class ArtnetController {
             this.artnet.close();
         }
     }
+    getStateForChannel(channel) {
+        return this.transitions.find(element => element.channel == channel);
+    }
     setValue(channel, value, transitionLength = 0, currentValue = 0) {
         const state = new DesiredState(channel, value, transitionLength, currentValue);
+        this.transitions = this.transitions.filter((state) => state.channel != channel);
         this.transitions.push(state);
         this.initLoop();
+    }
+    setValueFromCurrentValue(channel, value, transitionLength = 0, currentValue = 0) {
+        const state = this.getStateForChannel(channel);
+        if (state)
+            currentValue = state.currentValue;
+        this.setValue(channel, value, transitionLength, currentValue);
     }
     initLoop() {
         if (!this.loop) {

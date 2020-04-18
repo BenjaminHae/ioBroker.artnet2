@@ -107,7 +107,7 @@ class Artnet2 extends utils.Adapter {
         }
     }
     addObject(obj) {
-        let id = obj['_id'];
+        const id = obj['_id'];
         if (obj['type'] != 'state') {
             this.log.debug(`addObject: ${id} is not of type state`);
             return;
@@ -144,7 +144,7 @@ class Artnet2 extends utils.Adapter {
                 }
                 const channel = this.channels[id];
                 this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
-                this.artnetController.setValue(channel, state.val, transition, oldValue);
+                this.artnetController.setValueFromCurrentValue(channel, state.val, transition, oldValue);
                 this.states[id] = state.val;
                 const stateName = id.split('.').pop();
                 if (!state.ack && stateName && ['red', 'green', 'blue'].includes(stateName)) {
