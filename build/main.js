@@ -184,12 +184,17 @@ class Artnet2 extends utils.Adapter {
         let hexRes = '#';
         for (const color of ['red', 'green', 'blue']) {
             const state = this.states[idBase + '.' + color];
-            this.log.info(`color of ${idBase + '.' + color} is ${state}`);
-            if (!state)
+            if (!state) {
+                this.log.debug(`can't create Hex color as ${idBase + '.' + color} is not set`);
                 return '';
+            }
             let val = state.toString(16).toUpperCase();
             if (val.length < 2)
                 val = '0' + val;
+            if (val.length > 2) {
+                this.log.debug(`can't create Hex color as ${idBase + '.' + color} is not set`);
+                return '';
+            }
             hexRes += val;
         }
         return hexRes;
