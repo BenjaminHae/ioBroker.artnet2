@@ -48,7 +48,7 @@ function load(settings, onChange) {
                     names.push(name + ' ' + i);
                 }
             }
-            createAndStoreDevices(name, firstAddress, fixtureId);
+            createAndStoreDevices(names, firstAddress, fixtureId);
         });
     $('#show_artnet_add').off('click').on('click', function () {
         // find next free address
