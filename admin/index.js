@@ -137,5 +137,5 @@ function createAndStoreDevices(names, firstAddress, fixtureId, callback) {
         currentAddress += channelNumber;
     }
     
-    backendInsertObjs(objects, callback);
+    backendInsertObj(objects, callback);
 }
