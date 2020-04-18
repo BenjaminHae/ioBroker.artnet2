@@ -121,13 +121,13 @@ function backendInsertObjs(_objs) {
     }
 }
 function createAndStoreDevices(names, firstAddress, fixtureId) {
-    let objects = [];
-    let currentAddress = firstAddress;
     const fixture = fixtures[fixtureId];
+    let currentAddress = firstAddress;
     let channelNumber = fixture.native.length;
-    
+
+    let objects = [];
     for (const deviceName of names) {
-        objects.concat(createDevice(fixture, deviceName, currentAddress));
+        objects = objects.concat(createDevice(fixture, deviceName, currentAddress));
         currentAddress += channelNumber;
     }
     
