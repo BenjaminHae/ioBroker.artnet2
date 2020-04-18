@@ -2,10 +2,10 @@
 * {
     box-sizing: border-box
 }
-.m {
+/*.m {
     /* Don't cut off dropdowns! */
-    overflow: initial;
-}
+   /* overflow: initial;
+}*/
 
 /* Add your styles here */
 .m .select-wrapper+label {

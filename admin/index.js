@@ -34,10 +34,10 @@ function load(settings, onChange) {
     });
 
     $('#artnet_add_device').off('click').on('click', function () {
-            let name         = $('#artnet_add_device_name').val();
-            let firstAddress = parseInt($('#artnet_add_device_first-address').val(), 10);
-            let fixture      = fixtures[$('#artnet_add_device_fixture').val()];
-            let count        = parseInt($('#artnet_add_device_fixture-count').val(), 10);
+            const name         = $('#artnet_add_device_name').val();
+            const firstAddress = parseInt($('#artnet_add_device_first-address').val(), 10);
+            const fixtureId      = $('#artnet_add_device_fixture').val();
+            const count        = parseInt($('#artnet_add_device_fixture-count').val(), 10);
 
             let names = [];
 
@@ -48,7 +48,7 @@ function load(settings, onChange) {
                     names.push(name + ' ' + i);
                 }
             }
-            createAndStoreDevices(name, firstAddress, fixture);
+            createAndStoreDevices(name, firstAddress, fixtureId);
         });
     $('#show_artnet_add').off('click').on('click', function () {
         // find next free address
