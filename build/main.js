@@ -174,6 +174,7 @@ class Artnet2 extends utils.Adapter {
             else {
                 this.log.debug(`unknown state change: ${id} to ${state.val}`);
             }
+            this.log.debug(`reached end of state change for ${id}`);
         }
         else {
             // The state was deleted
