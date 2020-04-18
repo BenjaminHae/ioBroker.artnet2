@@ -25,5 +25,29 @@ systemDictionary = {
     'universe': {
         'en': 'Art-Net universe',
         'de': 'Art-Net Universum',
+    },
+    'add fixture': {
+        'en': 'Add fixture',
+        'de': 'Gerät hinzufügen',
+    },
+    'Name': {
+        'en': 'Name',
+        'de': 'Name',
+    },
+    'Fixture': {
+        'en': 'Fixture',
+        'de': 'Gerätetyp',
+    },
+    'Count': {
+        'en': 'Count',
+        'de': 'Anzahl',
+    },
+    'First address': {
+        'en': 'First address',
+        'de': 'Erste Adresse',
     }
+    'Cancel': {
+        'en': 'Cancel',
+        'de': 'Abbrechen',
+    },
 };
