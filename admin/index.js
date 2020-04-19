@@ -30,7 +30,6 @@ function load(settings, onChange) {
             console.log("adding fixture option " + row.id + " by name " + _(row.value.native.channel.common.role));
             $('#artnet_add_device_fixture').append('<option value="' + row.id + '">' + _(row.value.native.channel.common.role) + '</option>');
         }
-        $('artnet_add_device_fixture').select();
     });
 
     $('#artnet_add_device').off('click').on('click', function () {
@@ -65,6 +64,7 @@ function load(settings, onChange) {
         $('#fixture-count').val(1);
         $('#first-address').val(max);
         $('#dialog-fixture').modal().modal('open');
+        $('artnet_add_device_fixture').select();
     });
 }
 
