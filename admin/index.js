@@ -66,7 +66,7 @@ function load(settings, onChange) {
         $('#first-address').val(max);
         $('#dialog-fixture').modal('open');
     });
-    $('#dialog-fixture').modal();
+    $('#dialog-fixture').modal({onOpenEnd: function() {$('artnet_add_device_fixture').select()}});
     $('artnet_add_device_fixture').select();
 }
 
