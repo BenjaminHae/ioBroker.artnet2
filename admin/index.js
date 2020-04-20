@@ -1,4 +1,5 @@
 var fixtures = {};
+var nextChannel = 0;
 // This will be called by the admin adapter when the settings page loads
 function load(settings, onChange) {
     // example: select elements with id=key and class=value and insert value
@@ -23,15 +24,8 @@ function load(settings, onChange) {
     // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
     if (M) M.updateTextFields();
 
-    socket.emit('getObjectView', 'system', 'meta', {startkey: 'artnet2.meta.', endkey: 'artnet2.meta.\u9999', include_docs: true}, function (err, res) {
-        for (let i = res.rows.length - 1; i >= 0; i--) {
-            const row = res.rows[i];
-            fixtures[row.id] = row.value;
-            console.log("adding fixture option " + row.id + " by name " + _(row.value.native.channel.common.role));
-            $('#artnet_add_device_fixture').append('<option value="' + row.id + '">' + _(row.value.native.channel.common.role) + '</option>');
-        }
-        $('#artnet_add_device_fixture').select();
-    });
+    loadFixtures();
+    loadNextChannel();
 
     $('#artnet_add_device').off('click').on('click', function () {
             const name         = $('#artnet_add_device_name').val();
@@ -53,17 +47,9 @@ function load(settings, onChange) {
             });
         });
     $('#show_artnet_add').off('click').on('click', function () {
-        // find next free address
-        var max = 1;
-        //$('.device').each(function () {
-        //    var id = $(this).data('channel');
-        //    if (objects[id].native.address + objects[id].native.length > max) {
-        //        max = objects[id].native.address + objects[id].native.length;
-        //    }
-        //});
 
         $('#fixture-count').val(1);
-        $('#first-address').val(max);
+        $('#first-address').val(nextChannel);
         $('#dialog-fixture').modal('open');
     });
     $('#dialog-fixture').modal();
@@ -82,6 +68,28 @@ function save(callback) {
         }
     });
     callback(obj);
+}
+
+function loadFixtures(){
+    socket.emit('getObjectView', 'system', 'meta', {startkey: 'artnet2.meta.', endkey: 'artnet2.meta.\u9999', include_docs: true}, function (err, res) {
+        for (let i = res.rows.length - 1; i >= 0; i--) {
+            const row = res.rows[i];
+            fixtures[row.id] = row.value;
+            console.log("adding fixture option " + row.id + " by name " + _(row.value.native.channel.common.role));
+            $('#artnet_add_device_fixture').append('<option value="' + row.id + '">' + _(row.value.native.channel.common.role) + '</option>');
+        }
+        $('#artnet_add_device_fixture').select();
+    });
+}
+function loadNextChannel() {
+    socket.emit('getObjectView', 'system', 'channel', {startkey: 'artnet2.' + instance + '.', endkey: 'artnet2.' + instance + '.\u9999', include_docs: true}, function (err, res) {
+            res.rows.sort(function (a, b) {
+                    return a.value.native.address > b.value.native.address;
+                });
+            let lastDevice = res.rows[res.rows.length - 1];
+            nextChannel = lastDevice.value.native.address + lastDevice.value.native.length;
+            console.log("next free channel is " + nextChannel);
+        });
 }
 
 function generateDeviceStates(fixture, deviceId, deviceName, firstAddress) {
