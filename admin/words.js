@@ -27,8 +27,12 @@ systemDictionary = {
         'de': 'Art-Net Universum',
     },
     'add fixture': {
-        'en': 'Add fixture',
+        'en': 'Add Fixture',
         'de': 'Gerät hinzufügen',
+    },
+    'add': {
+        'en': 'add',
+        'de': 'hinzufügen',
     },
     'Name': {
         'en': 'Name',
@@ -52,6 +56,22 @@ systemDictionary = {
     },
     'help': {
         'en': 'The devices can be only created here. To change the name or delete object, please use admin object editor. To change the address or type the device must be deleted and created anew.', 
-        'de': 'Die Geräte können hier nur erzeugt werden. Um den Namen zu ändern, oder das Objekt zu löschen, benutzen Sie bitte Admin-Lasche-"Objekte". Um die Adresse oder den Typ zu ändern, muss das Gerät neu erzuegt werden.'
-    }
+        'de': 'Die Geräte können hier nur erzeugt werden. Um den Namen zu ändern, oder das Objekt zu löschen, benutzen Sie bitte Admin-Lasche-"Objekte". Um die Adresse oder den Typ zu ändern, muss das Gerät neu erzeugt werden.'
+    },
+    'add success': {
+        'en': 'Successfully added device',
+        'de': 'Gerät erfolgreich erzeugt',
+    },
+    'new fixture': {
+        'en': 'New Fixture',
+        'de': 'Neues Gerät',
+    },
+    'light.rgb': {
+        'en': 'RGB Light',
+        'de': 'RGB Licht',
+    },
+    'light.dimmer': {
+        'en': 'dimmer',
+        'de': 'Dimmer',
+    },
 };
