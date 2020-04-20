@@ -87,9 +87,10 @@ function loadNextChannel() {
             res.rows.sort(function (a, b) {
                     return a.value.native.address > b.value.native.address;
                 });
-            let lastDevice = res.rows[res.rows.length - 1];
-            nextChannel = lastDevice.value.native.address + lastDevice.value.native.length;
-            console.log("next free channel is " + nextChannel);
+            if (res.rows.length > 0) {
+                let lastDevice = res.rows[res.rows.length - 1];
+                nextChannel = lastDevice.value.native.address + lastDevice.value.native.length;
+            }
         });
 }
 
@@ -143,6 +144,7 @@ function createAndStoreDevices(names, firstAddress, fixtureId, callback) {
         objects = objects.concat(createDevice(fixture, deviceName, currentAddress));
         currentAddress += channelNumber;
     }
+    nextChannel = Math.max(currentAddress, nextChannel);
     
     backendInsertObj(objects, callback);
 }
