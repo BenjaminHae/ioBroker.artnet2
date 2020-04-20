@@ -48,8 +48,9 @@ function load(settings, onChange) {
         });
     $('#show_artnet_add').off('click').on('click', function () {
 
-        $('#fixture-count').val(1);
-        $('#first-address').val(nextChannel);
+        $('#artnet_add_device_name').val(_("new fixture"));
+        $('#artnet_add_device_fixture-count').val(1);
+        $('#artnet_add_device_first-address').val(nextChannel);
         $('#dialog-fixture').modal('open');
     });
     $('#dialog-fixture').modal();
