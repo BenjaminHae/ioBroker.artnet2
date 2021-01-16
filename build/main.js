@@ -224,7 +224,7 @@ class Artnet2 extends utils.Adapter {
             baseId += '.';
         }
         const keys = Object.keys(this.channels);
-        return keys.filter((elt) => { elt.startsWith(baseId); });
+        return keys.filter((elt) => elt.startsWith(baseId));
     }
     splitRgbColor(rgb) {
         if (!rgb)
