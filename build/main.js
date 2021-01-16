@@ -44,12 +44,15 @@ class Artnet2 extends utils.Adapter {
             // in this template all states changes inside the adapters namespace are subscribed
             this.subscribeStates('*');
             this.subscribeObjects('*');
+            this.log.debug(`reading objects`);
             this.getAdapterObjects((objects) => {
                 for (const id in objects) {
                     const obj = objects[id];
+                    this.log.debug(`adding object ${id}`);
                     this.addObject(obj);
                 }
             });
+            this.log.debug(`reading states`);
             this.getStates('*', (err, states) => {
                 if (err) {
                     this.log.info('Could not fetch states' + err);
@@ -57,18 +60,22 @@ class Artnet2 extends utils.Adapter {
                 }
                 for (const id in states) {
                     if (states[id]) {
+                        this.log.debug(`parsing state ${id}`);
                         // if it is a switch state
                         if (this.roles[id] == "switch") {
+                            this.log.debug(`storing switch state ${id}: ${states[id].val}`);
                             this.switchStates[this.getIdBase(id)] = states[id].val ? 1 : 0;
                         }
                         // if it is a number state
                         else {
+                            this.log.debug(`storing state ${id}: ${states[id].val}`);
                             this.states[id] = states[id].val;
                         }
                     }
                 }
             });
             // instanciate artnet controller
+            this.log.debug(`instanciating ArtnetController: ${this.config.host}:${this.config.port}: ${this.config.universe}`);
             this.artnetController = new artnetController_1.ArtnetController(this.config.host, this.config.port, this.config.universe);
         });
     }
