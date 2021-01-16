@@ -69,6 +69,9 @@ For later updates, the above procedure is not necessary. Just do the following:
 
 ## Changelog
 
+### 0.0.2
+* (BenjaminHae) Add switch states, these can be used to deactivate a device ( for example through home assisstant )
+
 ### 0.0.1
 * (BenjaminHae) initial release
 

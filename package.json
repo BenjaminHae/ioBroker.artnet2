@@ -1,6 +1,6 @@
 {
   "name": "iobroker.artnet2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Sends Art-Net data to an Art-Net node",
   "author": {
     "name": "BenjaminHae",
