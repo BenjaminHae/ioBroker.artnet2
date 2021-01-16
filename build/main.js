@@ -158,6 +158,7 @@ class Artnet2 extends utils.Adapter {
                 this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
                 // set channel according to switchState
                 const switchFactor = this.switchStates[this.getIdBase(id)] || 1;
+                this.log.debug(`I switch Factor for ${id} is ${switchFactor}`);
                 this.artnetController.setValueFromCurrentValue(channel, state.val * switchFactor, this.transitionTimeToSteps(transition), oldValue);
                 this.states[id] = state.val;
                 const stateName = id.split('.').pop();
@@ -193,7 +194,7 @@ class Artnet2 extends utils.Adapter {
                 const affChannels = this.getObjectChannels(baseId);
                 for (let channelId of affChannels) {
                     this.log.debug(`updating affected channel ${channelId}`);
-                    this.setState(channelId, this.states[channelId]);
+                    this.setState(channelId, this.states[channelId], true);
                 }
             }
             else {
