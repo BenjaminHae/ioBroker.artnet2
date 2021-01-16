@@ -102,7 +102,7 @@ function generateDeviceStates(fixture, deviceId, deviceName, firstAddress) {
         state._id = deviceId + '.' + dpType;
         state.parent = deviceId;
         state.common.name = deviceName ? deviceName + ' ' + dpType : state._id;
-        if ("channel" in state.native) {
+        if ("native" in state && "channel" in state.native) {
             state.native.channel = firstAddress++;
         }
     }
