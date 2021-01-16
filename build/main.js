@@ -272,7 +272,7 @@ class Artnet2 extends utils.Adapter {
             if (val.length < 2)
                 val = '0' + val;
             if (val.length > 2) {
-                this.log.debug(`can't create Hex color as ${idBase + '.' + color} is not set`);
+                this.log.debug(`can't create Hex color as ${idBase + '.' + color} is too long (val: ${val}, state: ${state})`);
                 return '';
             }
             hexRes += val;
