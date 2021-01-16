@@ -83,8 +83,10 @@ class Artnet2 extends utils.Adapter {
                     this.log.debug(`parsing state ${id}`);
                     // if it is a switch state
                     if (this.roles[id] == "switch") {
-                        this.log.debug(`storing switch state ${id}: ${states[id].val}`);
-                        this.switchStates[this.getIdBase(id)] = states[id].val ? 1 : 0;
+                        const state = states[id].val ? 1 : 0;
+                        const baseId = this.getIdBase(id);
+                        this.log.debug(`storing switch state ${baseId}: ${state}`);
+                        this.switchStates[baseId] = state;
                     }
                     // if it is a number state
                     else {
