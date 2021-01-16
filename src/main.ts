@@ -178,7 +178,6 @@ class Artnet2 extends utils.Adapter {
                     oldValue = this.states[id];
                 }
                 const channel = this.channels[id]
-                this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
 
                 // set channel according to switchState
                 let switchFactor = this.switchStates[this.getIdBase(id)];
@@ -187,7 +186,10 @@ class Artnet2 extends utils.Adapter {
                     switchFactor = 1;
                     this.log.debug(`Switch Factor set to 1`);
                 }
-                this.artnetController.setValueFromCurrentValue(channel, state.val * switchFactor, this.transitionTimeToSteps(transition), oldValue);
+                let effectiveValue = state.val * switchFactor;
+                this.log.debug(`channel ${channel} value is ${state.val}, switch is set to ${switchFactor}`);
+                this.log.debug(`${id}: channel ${channel} transition to ${effectiveValue} in ${transition} from ${oldValue}`);
+                this.artnetController.setValueFromCurrentValue(channel, effectiveValue, this.transitionTimeToSteps(transition), oldValue);
 
                 this.states[id] = state.val;
                 
