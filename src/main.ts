@@ -189,7 +189,7 @@ class Artnet2 extends utils.Adapter {
                 // set channel according to switchState
                 let switchFactor = this.switchStates[this.getIdBase(id)];
                 this.log.debug(`Stored Switch Factor for ${id} is ${switchFactor}`);
-                if (switchFactor === null) {
+                if (switchFactor !== 1 && switchFactor !== 0) {
                     switchFactor = 1;
                     this.log.debug(`Switch Factor set to 1`);
                 }
