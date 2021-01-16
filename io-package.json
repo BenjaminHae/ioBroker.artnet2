@@ -109,6 +109,15 @@
                     {
                         "type": "state",
                         "common": {
+                            "role": "switch",
+                            "type": "boolean",
+                            "write": true
+                        },
+                        "native": {"channel": null}
+                    },
+                    {
+                        "type": "state",
+                        "common": {
                             "role": "level.dimmer",
                             "type": "number",
                             "min": 0,
@@ -153,6 +162,15 @@
                 },
                 "length": 3,
                 "states": [
+                    {
+                        "type": "state",
+                        "common": {
+                            "role": "switch",
+                            "type": "boolean",
+                            "write": true
+                        },
+                        "native": {"channel": null}
+                    },
                     {
                         "type": "state",
                         "common": {
