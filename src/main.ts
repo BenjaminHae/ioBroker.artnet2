@@ -27,11 +27,14 @@ declare global {
 interface IdDictionary<T> {
     [key: string]: T;
 }
+type SwitchState = 0 | 1;
+
 class Artnet2 extends utils.Adapter {
     artnetController: ArtnetController | null = null;
     states: IdDictionary<number> = {};
     roles: IdDictionary<string> = {};
     channels: IdDictionary<number> = {};
+    switchStates: IdDictionary<SwitchState> = {};
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -60,6 +63,13 @@ class Artnet2 extends utils.Adapter {
 
         this.subscribeObjects('*');
 
+        this.getAdapterObjects((objects) => {
+            for (const id in objects) {
+                const obj = objects[id];
+                this.addObject(obj);
+            }
+        });
+
         this.getStates('*', (err, states) => {
             if (err) {
                 this.log.info('Could not fetch states' + err);
@@ -67,14 +77,15 @@ class Artnet2 extends utils.Adapter {
             }
             for (const id in states) {
                 if (states[id]) {
-                    this.states[id] = states[id].val;
+                    // if it is a switch state
+                    if (this.roles[id] == "switch") {
+                        this.switchStates[this.getIdBase(id)] = states[id].val ? 1 : 0;
+                    }
+                    // if it is a number state
+                    else {
+                        this.states[id] = states[id].val;
+                    }
                 }
-            }
-        });
-        this.getAdapterObjects((objects) => {
-            for (const id in objects) {
-                const obj = objects[id];
-                this.addObject(obj);
             }
         });
 
@@ -87,10 +98,10 @@ class Artnet2 extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
-            this.log.info('cleaned everything up...');
             if (this.artnetController) {
                 this.artnetController.close();
             }
+            this.log.info('cleaned everything up...');
             callback();
         } catch (e) {
             callback();
@@ -120,6 +131,10 @@ class Artnet2 extends utils.Adapter {
             if (id in this.states) {
                 this.log.debug(`deleting state ${id}`);
                 delete this.states[id];
+            }
+            if (this.getIdBase(id) in this.switchStates) {
+                this.log.debug(`deleting state ${id}`);
+                delete this.switchStates[this.getIdBase(id)];
             }
         }
     }
@@ -164,7 +179,11 @@ class Artnet2 extends utils.Adapter {
                 }
                 const channel = this.channels[id]
                 this.log.debug(`${id}: channel ${channel} transition to ${state.val} in ${transition} from ${oldValue}`);
-                this.artnetController.setValueFromCurrentValue(channel, state.val, this.transitionTimeToSteps(transition), oldValue);
+
+                // set channel according to switchState
+                const switchFactor = this.switchStates[this.getIdBase(id)] || 1;
+                this.artnetController.setValueFromCurrentValue(channel, state.val * switchFactor, this.transitionTimeToSteps(transition), oldValue);
+
                 this.states[id] = state.val;
                 
                 const stateName = id.split('.').pop();
@@ -192,6 +211,18 @@ class Artnet2 extends utils.Adapter {
                 this.log.debug(`storing new transition ${id}: ${state.val}`);
                 this.states[id] = state.val;
             }
+            else if (this.roles[id] == 'switch') {
+                const baseId = this.getIdBase(id);
+                this.log.debug(`switch ${id} for object ${baseId} was set to: ${state.val}`);
+                this.switchStates[baseId] = state.val ? 1 : 0;
+
+                // update affected channels
+                const affChannels = this.getObjectChannels(baseId);
+                for (let channelId of affChannels) {
+                    this.log.debug(`updating affected channel ${channelId}`);
+                    this.setState(channelId, this.states[channelId]);
+                }
+            }
             else {
                 this.log.debug(`unknown state change: ${id} to ${state.val}`);
             }
@@ -215,6 +246,14 @@ class Artnet2 extends utils.Adapter {
         const idParts = id.split('.');
         idParts.pop();
         return idParts.join('.');
+    }
+
+    private getObjectChannels(baseId: string): Array<string> {
+        if (!baseId.endsWith('.')) {
+            baseId += '.';
+        }
+        const keys = Object.keys(this.channels);
+        return keys.filter((elt) => {elt.startsWith(baseId)});
     }
 
     private splitRgbColor(rgb: string): Array<number> {
