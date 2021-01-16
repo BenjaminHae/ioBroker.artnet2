@@ -116,8 +116,7 @@
                             "role": "switch",
                             "type": "boolean",
                             "write": true
-                        },
-                        "native": {"channel": null}
+                        }
                     },
                     {
                         "type": "state",
@@ -172,8 +171,7 @@
                             "role": "switch",
                             "type": "boolean",
                             "write": true
-                        },
-                        "native": {"channel": null}
+                        }
                     },
                     {
                         "type": "state",
