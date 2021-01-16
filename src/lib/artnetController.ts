@@ -61,7 +61,7 @@ export class ArtnetController {
         }
     }
 
-    getStateForChannel(channel: number): DesiredState | undefined {
+    private getStateForChannel(channel: number): DesiredState | undefined {
         return this.transitions.find(element => element.channel == channel);
     }
 
@@ -80,20 +80,20 @@ export class ArtnetController {
         this.setValue(channel, value, transitionLength, currentValue);
     }
 
-    initLoop(): void {
+    private initLoop(): void {
         if (! this.loop) {
             this.loop = setInterval(() => this.stateLoop(), this.periodLength);
         }
     }
     
-    stopLoop(): void {
+    private stopLoop(): void {
         if (this.loop) {
             clearInterval(this.loop);
             this.loop = null;
         }
     }
 
-    sendToArtnet(channels: Array<Channel>): void {
+    private sendToArtnet(channels: Array<Channel>): void {
         channels.sort( (a: Channel, b: Channel) => { return a.channel - b.channel });
         const startAddress: number = channels[0].channel;
         let currentAddress: number = startAddress;
@@ -109,7 +109,7 @@ export class ArtnetController {
         this.artnet.set(this.universe, startAddress, values);
     }
 
-    stateLoop(): void {
+    private stateLoop(): void {
         if (this.transitions.length) {
             // calculate new channel-values
             for (const state of this.transitions) {
